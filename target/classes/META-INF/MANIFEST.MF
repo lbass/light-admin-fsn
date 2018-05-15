@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: LightAdmin
+Implementation-Version: 1.2.0.RC1.fsn
+Built-By: kdw
+Specification-Vendor: LA Team
+Specification-Title: LightAdmin
+Implementation-Vendor-Id: org.lightadmin
+Build-Jdk: 1.8.0_161
+Specification-Version: 1.2.0.RC1.fsn
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: LA Team
+
