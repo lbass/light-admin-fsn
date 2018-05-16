@@ -27,6 +27,7 @@ import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.util.StringUtils.uncapitalize;
@@ -44,8 +45,8 @@ public class DomainTypeAdministrationConfiguration implements DomainTypeBasicCon
         Assert.notNull(configurationUnits, "ConfigurationUnits must not be null!");
 
         Class<?> domainType = configurationUnits.getDomainType();
-
-        this.repository = (DynamicJpaRepository<?, ? extends Serializable>) repositories.getRepositoryFor(domainType);
+        Optional<Object> optionalRepository = repositories.getRepositoryFor(domainType);
+        this.repository = (DynamicJpaRepository<?, ? extends Serializable>) optionalRepository.get();
         this.persistentEntity = repositories.getPersistentEntity(domainType);
         this.configurationUnits = configurationUnits;
     }

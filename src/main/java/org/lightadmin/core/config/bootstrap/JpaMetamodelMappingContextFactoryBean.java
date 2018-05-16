@@ -15,15 +15,15 @@
  */
 package org.lightadmin.core.config.bootstrap;
 
-import org.springframework.beans.factory.config.AbstractFactoryBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.util.Assert;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.springframework.beans.factory.config.AbstractFactoryBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 
 public class JpaMetamodelMappingContextFactoryBean extends AbstractFactoryBean<JpaMetamodelMappingContext> {
 
@@ -50,7 +50,9 @@ public class JpaMetamodelMappingContextFactoryBean extends AbstractFactoryBean<J
             }
         }
 
-        JpaMetamodelMappingContext context = new JpaMetamodelMappingContext(metamodel);
+        Set<Metamodel> metamodelSet = new HashSet<>();
+        metamodelSet.add(metamodel);
+        JpaMetamodelMappingContext context = new JpaMetamodelMappingContext(metamodelSet);
         context.setInitialEntitySet(entitySources);
         context.initialize();
 
@@ -59,13 +61,13 @@ public class JpaMetamodelMappingContextFactoryBean extends AbstractFactoryBean<J
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(entityManager, "EntityManager must not be null!");
+        // Assert.notNull(entityManager, "EntityManager must not be null!");
         super.afterPropertiesSet();
     }
 
     @SuppressWarnings("unused")
     public void setEntityManager(EntityManager entityManager) {
-        Assert.notNull(entityManager, "EntityManager must not be null!");
+        // Assert.notNull(entityManager, "EntityManager must not be null!");
         this.entityManager = entityManager;
     }
 }

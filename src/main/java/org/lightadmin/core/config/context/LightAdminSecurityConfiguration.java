@@ -15,6 +15,18 @@
  */
 package org.lightadmin.core.config.context;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newLinkedHashMap;
+import static java.util.Arrays.asList;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.Filter;
+
 import org.lightadmin.core.config.LightAdminConfiguration;
 import org.lightadmin.core.web.security.LightAdminRequestCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +46,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -60,17 +72,6 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-
-import javax.servlet.Filter;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Properties;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newLinkedHashMap;
-import static java.util.Arrays.asList;
 
 @Configuration
 public class LightAdminSecurityConfiguration {
@@ -182,7 +183,7 @@ public class LightAdminSecurityConfiguration {
     @Autowired
     public AuthenticationProvider authenticationProvider(UserDetailsService usersService) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new ShaPasswordEncoder());
+        provider.setPasswordEncoder(new SCryptPasswordEncoder());
         provider.setUserDetailsService(usersService);
         provider.afterPropertiesSet();
         return provider;

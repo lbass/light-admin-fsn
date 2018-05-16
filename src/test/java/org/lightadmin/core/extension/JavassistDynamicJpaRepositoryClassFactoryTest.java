@@ -24,7 +24,6 @@ public class JavassistDynamicJpaRepositoryClassFactoryTest {
     @Test
     public void testCreateDynamicRepositoryClass() {
         Class<DynamicJpaRepository<String, Long>> dynamicRepositoryClass = testee.createDynamicRepositoryClass(String.class, Long.class);
-
         ParameterizedType baseType = (ParameterizedType) dynamicRepositoryClass.getGenericInterfaces()[0];
         Type[] baseTypeArgs = baseType.getActualTypeArguments();
 

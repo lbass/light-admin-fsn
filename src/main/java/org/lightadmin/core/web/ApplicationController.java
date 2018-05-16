@@ -15,6 +15,11 @@
  */
 package org.lightadmin.core.web;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
+
+import java.io.Serializable;
+
 import org.lightadmin.core.config.LightAdminConfiguration;
 import org.lightadmin.core.config.domain.DomainTypeAdministrationConfiguration;
 import org.lightadmin.core.config.domain.GlobalAdministrationConfiguration;
@@ -28,14 +33,13 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
-
-import java.io.Serializable;
-
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Controller
 @SuppressWarnings({"unused", "unchecked"})
@@ -64,7 +68,7 @@ public class ApplicationController {
         return new ModelAndView("error-page").addObject("exception", ex);
     }
 
-    @ExceptionHandler(NoSuchRequestHandlingMethodException.class)
+    @ExceptionHandler(NoHandlerFoundException.class)
     @RequestMapping(value = "/page-not-found", method = RequestMethod.GET)
     public String handlePageNotFound() {
         return "page-not-found";
@@ -156,7 +160,7 @@ public class ApplicationController {
         PersistentEntity persistentEntity = domainTypeConfiguration.getPersistentEntity();
         Serializable id = (Serializable) conversionService.convert(entityId, persistentEntity.getIdProperty().getActualType());
 
-        return repository.findOne(id);
+        return repository.findById(id);
     }
 
     private void addDomainTypeConfigurationToModel(String domainTypeName, Model model) {

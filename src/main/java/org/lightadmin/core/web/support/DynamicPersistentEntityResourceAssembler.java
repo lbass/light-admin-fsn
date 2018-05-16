@@ -16,10 +16,13 @@
 package org.lightadmin.core.web.support;
 
 import org.springframework.data.mapping.PersistentEntity;
+import org.springframework.data.mapping.context.PersistentEntities;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.data.rest.core.mapping.ResourceMappings;
+import org.springframework.data.rest.core.support.SelfLinkProvider;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
+import org.springframework.data.rest.webmvc.mapping.Associations;
 import org.springframework.data.rest.webmvc.support.Projector;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
@@ -36,11 +39,19 @@ import static org.springframework.beans.PropertyAccessorFactory.forDirectFieldAc
  */
 public class DynamicPersistentEntityResourceAssembler extends PersistentEntityResourceAssembler {
 
+	/*
     public DynamicPersistentEntityResourceAssembler(PersistentEntityResourceAssembler resourceAssembler) {
         super(repositories(resourceAssembler), entityLinks(resourceAssembler), projector(resourceAssembler), mappings(resourceAssembler));
     }
+    */
 
-    /**
+    public DynamicPersistentEntityResourceAssembler(PersistentEntities entities, Projector projector,
+			Associations associations, SelfLinkProvider linkProvider) {
+		super(entities, projector, associations, linkProvider);
+		// TODO Auto-generated constructor stub
+	}
+    
+	/**
      * 
      */
     @Override

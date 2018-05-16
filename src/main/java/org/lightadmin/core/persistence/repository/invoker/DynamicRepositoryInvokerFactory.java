@@ -15,10 +15,12 @@
  */
 package org.lightadmin.core.persistence.repository.invoker;
 
+import java.util.Optional;
+
 import org.lightadmin.core.persistence.repository.DynamicJpaRepository;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.data.rest.core.invoke.RepositoryInvoker;
-import org.springframework.data.rest.core.invoke.RepositoryInvokerFactory;
+import org.springframework.data.repository.support.RepositoryInvoker;
+import org.springframework.data.repository.support.RepositoryInvokerFactory;
 
 public class DynamicRepositoryInvokerFactory implements RepositoryInvokerFactory {
 
@@ -32,7 +34,8 @@ public class DynamicRepositoryInvokerFactory implements RepositoryInvokerFactory
 
     @Override
     public RepositoryInvoker getInvokerFor(Class<?> domainType) {
-        DynamicJpaRepository dynamicJpaRepository = (DynamicJpaRepository) repositories.getRepositoryFor(domainType);
+    	Optional<Object> optionalRepository = repositories.getRepositoryFor(domainType);
+        DynamicJpaRepository dynamicJpaRepository = (DynamicJpaRepository) optionalRepository.get();
         RepositoryInvoker repositoryInvoker = delegate.getInvokerFor(domainType);
 
         return new DynamicRepositoryInvokerWrapper(dynamicJpaRepository, repositoryInvoker);

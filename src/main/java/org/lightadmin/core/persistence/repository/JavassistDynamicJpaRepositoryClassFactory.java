@@ -15,19 +15,23 @@
  */
 package org.lightadmin.core.persistence.repository;
 
-import javassist.ClassPool;
-import javassist.CtClass;
+import static org.apache.commons.lang3.ArrayUtils.toArray;
+
+import java.io.Serializable;
+import java.util.UUID;
+
 import org.lightadmin.core.util.DynamicRepositoryBeanNameGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-import static javassist.bytecode.SignatureAttribute.*;
-import static org.apache.commons.lang3.ArrayUtils.toArray;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.bytecode.SignatureAttribute.ClassSignature;
+import javassist.bytecode.SignatureAttribute.ClassType;
+import javassist.bytecode.SignatureAttribute.TypeArgument;
 
 public class JavassistDynamicJpaRepositoryClassFactory implements DynamicRepositoryClassFactory {
 
@@ -47,23 +51,25 @@ public class JavassistDynamicJpaRepositoryClassFactory implements DynamicReposit
         try {
             ClassPool classPool = ClassPool.getDefault();
 
-            CtClass baseInterface = classPool.getOrNull(DynamicJpaRepository.class.getName());
+            CtClass baseInterface = classPool.get(DynamicJpaRepository.class.getName());
             if (baseInterface == null) {
                 baseInterface = classPool.makeInterface(DynamicJpaRepository.class.getName());
             }
 
-            CtClass dynamicRepositoryInterface = classPool.makeInterface(generateDynamicRepositoryClassReference(domainType), baseInterface);
-
+            CtClass dynamicRepositoryClass = classPool.makeInterface(generateDynamicRepositoryClassReference(domainType), baseInterface);
             ClassType baseInterfaceType = classType(DynamicJpaRepository.class, toArray(typeArgument(domainType), typeArgument(idType)));
+            dynamicRepositoryClass.setGenericSignature(classSignature(baseInterfaceType).encode());
+            
 
-            dynamicRepositoryInterface.setGenericSignature(classSignature(baseInterfaceType).encode());
-
-            return dynamicRepositoryInterface.toClass(classLoader, JavassistDynamicJpaRepositoryClassFactory.class.getProtectionDomain());
+            // CtConstructor constructor = new CtConstructor(null, dynamicRepositoryClass);
+            
+            return dynamicRepositoryClass.toClass(classLoader, JavassistDynamicJpaRepositoryClassFactory.class.getProtectionDomain());
         } catch (Exception e) {
             logger.error("Problem occured during DynamicRepository class creation process", e);
             throw new RuntimeException(e);
         }
     }
+
 
     private ClassSignature classSignature(ClassType baseInterfaceType) {
         return new ClassSignature(null, null, new ClassType[]{baseInterfaceType});

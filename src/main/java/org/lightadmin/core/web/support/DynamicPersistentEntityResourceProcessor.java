@@ -28,7 +28,7 @@ import org.lightadmin.core.storage.FileResourceStorage;
 import org.springframework.data.mapping.*;
 import org.springframework.data.rest.core.mapping.ResourceMappings;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
-import org.springframework.data.rest.webmvc.mapping.AssociationLinks;
+import org.springframework.data.rest.webmvc.mapping.Associations;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceProcessor;
@@ -56,14 +56,14 @@ public class DynamicPersistentEntityResourceProcessor implements ResourceProcess
     private final DynamicRepositoryEntityLinks entityLinks;
     private final DomainEntityLinks domainEntityLinks;
     private final FileResourceStorage fileResourceStorage;
-    private final AssociationLinks associationLinks;
+    private final Associations associationLinks;
 
     public DynamicPersistentEntityResourceProcessor(GlobalAdministrationConfiguration adminConfiguration, FileResourceStorage fileResourceStorage, DynamicRepositoryEntityLinks entityLinks, DomainEntityLinks domainEntityLinks, ResourceMappings resourceMappings) {
         this.adminConfiguration = adminConfiguration;
         this.domainEntityLinks = domainEntityLinks;
         this.entityLinks = entityLinks;
         this.fileResourceStorage = fileResourceStorage;
-        this.associationLinks = new AssociationLinks(resourceMappings);
+        this.associationLinks = new Associations(resourceMappings, null);
     }
 
     @Override

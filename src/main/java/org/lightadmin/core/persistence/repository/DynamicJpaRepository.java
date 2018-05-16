@@ -23,4 +23,5 @@ import java.io.Serializable;
 
 @Transactional
 public interface DynamicJpaRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+
 }

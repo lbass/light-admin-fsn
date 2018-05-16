@@ -8,7 +8,7 @@
     <artifactId>lightadmin</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.2.0.RC1.fsn</version>
+    <version>1.2.0.RC1.fsn.SNAPSHOT</version>
 
     <name>LightAdmin</name>
     <description>Pluggable data management solution for Java web applications developed in a "Rapid" manner
@@ -92,10 +92,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-        <spring.platform.version>1.1.2.RELEASE</spring.platform.version>
+        <spring.platform.version>Cairo-SR1</spring.platform.version>
 
         <commons-collections4.version>4.0</commons-collections4.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
@@ -136,11 +136,6 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
         </dependency>
 
         <dependency>
@@ -218,6 +213,12 @@
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-extras</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>jboss</groupId>
+            		<artifactId>javassist</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>
@@ -367,6 +368,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <scope>test</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.javassist</groupId>
+            		<artifactId>javassist</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -379,6 +386,11 @@
             <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.20.0-GA</version>
+		</dependency>
     </dependencies>
 
     <build>
@@ -483,81 +495,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>home-distribution</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>lightadmin-nexus</id>
-                    <url>http://lightadmin.org/nexus/content/repositories/snapshots</url>
-                </snapshotRepository>
-
-                <repository>
-                    <id>lightadmin-nexus</id>
-                    <url>http://lightadmin.org/nexus/content/repositories/releases</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-        <profile>
-            <id>oss-distribution</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.2</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>oss</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <!-- 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    -->
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    
 </project>

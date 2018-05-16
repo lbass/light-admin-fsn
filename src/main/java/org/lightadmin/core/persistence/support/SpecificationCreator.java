@@ -159,7 +159,7 @@ public class SpecificationCreator {
 
             final Serializable id = stringToSerializable(parameterValue, (Class<? extends Serializable>) domainTypeBasicConfiguration.getPersistentEntity().getIdProperty().getType());
 
-            final Object entity = repository.findOne(id);
+            final Object entity = repository.findById(id);
 
             if (attribute.isCollectionLike()) {
                 final Expression<Collection> objectPath = root.get(attributeName);

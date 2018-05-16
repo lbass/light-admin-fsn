@@ -28,14 +28,17 @@ import org.lightadmin.core.web.json.LightAdminJacksonModule;
 import org.lightadmin.core.web.support.*;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.repository.support.Repositories;
+import org.springframework.data.repository.support.RepositoryInvokerFactory;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
-import org.springframework.data.rest.core.invoke.RepositoryInvokerFactory;
 import org.springframework.data.rest.core.support.DomainObjectMerger;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.config.PersistentEntityResourceAssemblerArgumentResolver;
@@ -55,7 +58,12 @@ import static org.springframework.util.ClassUtils.isAssignableValue;
         includeFilters = @ComponentScan.Filter(RepositoryRestController.class), useDefaultFilters = false)
 public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcConfiguration {
 
-    @Autowired
+    public LightAdminRepositoryRestMvcConfiguration(ApplicationContext context,
+			ObjectFactory<ConversionService> conversionService) {
+		super(context, conversionService);
+	}
+
+	@Autowired
     private ListableBeanFactory beanFactory;
 
     @Bean
@@ -94,7 +102,7 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
 
     @Bean
     public RepositoryInvokerFactory repositoryInvokerFactory() {
-        RepositoryInvokerFactory repositoryInvokerFactory = super.repositoryInvokerFactory();
+        RepositoryInvokerFactory repositoryInvokerFactory = super.repositoryInvokerFactory(null);
 
         return new DynamicRepositoryInvokerFactory(repositories(), repositoryInvokerFactory);
     }
@@ -110,10 +118,9 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
         return new FileManipulationRepositoryEventListener(configuration, fileResourceStorage);
     }
 
-    @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.setDefaultPageSize(10);
-        config.setBaseUri(lightAdminConfiguration().getApplicationRestBaseUrl());
+        config.setBasePath(lightAdminConfiguration().getApplicationRestBaseUrl().getPath());
         config.exposeIdsFor(globalAdministrationConfiguration().getAllDomainTypesAsArray());
         config.setReturnBodyOnCreate(true);
         config.setReturnBodyOnUpdate(true);
@@ -126,7 +133,6 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
         return requestMappingHandlerAdapter;
     }
 
-    @Override
     protected void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
         validatingListener.addValidator("beforeCreate", validator());
         validatingListener.addValidator("beforeSave", validator());
@@ -138,7 +144,6 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
         argumentResolvers.add(configurationHandlerMethodArgumentResolver());
     }
 
-    @Override
     protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
         objectMapper.registerModule(new LightAdminJacksonModule(globalAdministrationConfiguration()));
     }

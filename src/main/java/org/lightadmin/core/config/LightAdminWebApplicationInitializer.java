@@ -15,7 +15,34 @@
  */
 package org.lightadmin.core.config;
 
-import net.sf.ehcache.constructs.web.filter.GzipFilter;
+import static org.apache.commons.io.FileUtils.getFile;
+import static org.apache.commons.lang3.BooleanUtils.toBoolean;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMINISTRATION_BASE_PACKAGE;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMINISTRATION_BASE_URL;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMINISTRATION_FILE_STORAGE_PATH;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMINISTRATION_SECURITY;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_CUSTOM_FRAGMENT_SERVLET_URL;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_CUSTOM_RESOURCE_FRAGMENT_LOCATION;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_CUSTOM_RESOURCE_LOGO;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_CUSTOM_RESOURCE_LOGO_CLASSPATH_LOCATION;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_CUSTOM_RESOURCE_LOGO_WEB_INF_LOCATION;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_CUSTOM_RESOURCE_SERVLET_NAME;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_DEFAULT_LOGO_LOCATION;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_DISPATCHER_NAME;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_DISPATCHER_REDIRECTOR_NAME;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_LOGO_RESOURCE_SERVLET_NAME;
+import static org.lightadmin.core.util.LightAdminConfigurationUtils.LIGHT_ADMIN_LOGO_SERVLET_URL;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+
+import java.io.File;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import javax.servlet.http.HttpServletRequest;
+
 import org.lightadmin.core.config.bootstrap.LightAdminBeanDefinitionRegistryPostProcessor;
 import org.lightadmin.core.config.context.LightAdminContextConfiguration;
 import org.lightadmin.core.config.context.LightAdminSecurityConfiguration;
@@ -34,20 +61,8 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
-import org.springframework.web.servlet.ResourceServlet;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.regex.Pattern;
-
-import static org.apache.commons.io.FileUtils.getFile;
-import static org.apache.commons.lang3.BooleanUtils.toBoolean;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.lightadmin.core.util.LightAdminConfigurationUtils.*;
-import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
+import net.sf.ehcache.constructs.web.filter.GzipFilter;
 
 @SuppressWarnings("unused")
 @Order(LOWEST_PRECEDENCE)
