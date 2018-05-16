@@ -1,8 +1,0 @@
-org\lightadmin\api\config\utils\ScopeMetadataUtils$1.class
-org\lightadmin\core\config\domain\DomainTypeAdministrationConfiguration$1.class
-org\lightadmin\api\config\utils\FilterMetadataUtils$1.class
-org\lightadmin\core\storage\FileManipulationStrategyFactory$1.class
-org\lightadmin\core\view\LightAdminSpringTilesInitializer$1.class
-org\lightadmin\core\config\domain\field\FieldMetadataUtils$1.class
-org\lightadmin\core\config\domain\configuration\support\EntityNameExtractorFactory$1.class
-org\lightadmin\core\view\tags\form\EditControlDispatcherTag$1.class
